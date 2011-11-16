@@ -68,6 +68,12 @@ module ETL
       private
       def validate_row(row, line, file)
         ETL::Engine.logger.debug "validating line #{line} in file #{file}"
+
+        if (row.length != fields.length)
+          row.pop       while (row.length > fields.length)
+          row.push(nil) while (row.length < fields.length)
+        end
+
         if row.length != fields.length
           raise_with_info( MismatchError,
             "The number of columns from the source (#{row.length}) does not match the number of columns in the definition (#{fields.length})",
